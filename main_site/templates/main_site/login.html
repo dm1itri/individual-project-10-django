@@ -1,0 +1,29 @@
+{% extends 'main_site/base.html' %}
+
+{% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/static/main_site/create_game.css">
+{% endblock head %}
+
+{% block div_body %}
+    <div class="div_body w-100">
+
+        <form action="{% url 'main_site:Вход' %}" method="post">
+            {% csrf_token %}
+            <img class="mb-4" src="/static/image/icon.png" alt="Кубик">
+            <h1 class="h3 mb-3 fw-normal">Вход</h1>
+
+            {% for f in form %}
+                <div class="form-floating">
+                    {{ f }}
+                    {{ f.errors.0 }}
+                    <label for="{{ f.id_for_label }}">{{ f.label}}</label>
+
+                </div>
+            {% endfor %}
+
+            <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
+            <p class="mt-5 mb-3 text-muted">Гимназия №271</p>
+        </form>
+    </div>
+{% endblock div_body %}

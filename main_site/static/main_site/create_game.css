@@ -1,0 +1,11 @@
+.div_body {
+  text-align: center;
+  height: 85vh;
+}
+.div_body form {
+  max-width: 300px;
+  margin: auto;
+  margin-top: 15vh;
+}
+
+/*# sourceMappingURL=create_game.css.map */

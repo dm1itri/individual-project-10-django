@@ -1,0 +1,23 @@
+main {
+  text-align: center;
+}
+
+.row {
+  width: 1252px;
+}
+.row button {
+  height: 50px;
+}
+.row .col {
+  align-items: center;
+  margin-left: 25px;
+  margin-right: 25px;
+  margin-bottom: 55px;
+  padding: 0;
+  width: 200px;
+}
+.row .col img.rounded-circle {
+  max-width: 100%;
+}
+
+/*# sourceMappingURL=main.css.map */

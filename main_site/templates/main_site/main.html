@@ -1,0 +1,34 @@
+{% extends 'main_site/base.html' %}
+{% load static %}
+{% block head %}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="{% static "main_site/main.css" %}">
+{% endblock head %}
+
+{% block div_body %}
+    <main class="container  align-items-center">
+    {% for game in games %}
+        <div class="row row-cols-5 gameroom">
+            {% for player in game.list_of_players %}
+
+                  <div class="col">
+                        {% if player != None %}
+                            <img src="{% static "image/astronaut.png"%}" class="rounded-circle" alt="Аватарка"><br>
+                            <a class="btn btn-secondary" href="{% url "main_site:Главная" %}">{{ player.user }}</a>
+                        {% else %}
+                            <img src="{% static "image/add.png"%}" class="rounded-circle" alt="Присоединиться"><br>
+                            <a class="btn btn-secondary" href="{% url "main_site:Главная" %}">Свободно</a>
+                        {% endif %}
+                  </div>
+            {% endfor %}
+        {% if game.first_player == this_player %}
+            <form action="{% url 'main_site:Распустить игровую комнату до старта' %}" method="post">
+                {% csrf_token %}
+                <button type="submit" name="dismiss" class="btn btn-danger">Распустить</button>
+            </form>
+
+        {% endif %}
+        </div>
+    {% endfor %}
+    </main>
+{% endblock div_body %}
