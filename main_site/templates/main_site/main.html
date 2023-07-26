@@ -14,20 +14,25 @@
                   <div class="col">
                         {% if player != None %}
                             <img src="{% static "image/astronaut.png"%}" class="rounded-circle" alt="Аватарка"><br>
-                            <a class="btn btn-secondary" href="{% url "main_site:Главная" %}">{{ player.user }}</a>
+                            <a class="btn btn-secondary" href="{% url "main_site:Профиль игрока" %}">{{ player.user }}</a>
                         {% else %}
                             <img src="{% static "image/add.png"%}" class="rounded-circle" alt="Присоединиться"><br>
-                            <a class="btn btn-secondary" href="{% url "main_site:Главная" %}">Свободно</a>
+                            <a class="btn btn-secondary" href="{% url "main_site:Присоединиться к игре" game.id %}">Свободно</a>
                         {% endif %}
                   </div>
             {% endfor %}
-        {% if game.first_player == this_player %}
-            <form action="{% url 'main_site:Распустить игровую комнату до старта' %}" method="post">
-                {% csrf_token %}
-                <button type="submit" name="dismiss" class="btn btn-danger">Распустить</button>
-            </form>
-
-        {% endif %}
+            {% if game.first_player == this_player %}
+                <form action="{% url 'main_site:Распустить игровую комнату до старта' %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="dismiss" class="btn btn-danger">Распустить</button>
+                </form>
+            {% endif %}
+            {% if game.second_player == this_player or game.third_player == this_player or game.fourth_player == this_player %}
+                <form action="{% url 'main_site:Покинуть игру' game.id %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="dismiss" class="btn btn-danger">Покинуть комнату</button>
+                </form>
+            {% endif %}
         </div>
     {% endfor %}
     </main>

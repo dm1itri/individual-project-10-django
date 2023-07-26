@@ -1,0 +1,169 @@
+body {
+  font-family: "Nunito Sans", sans-serif;
+}
+
+.playerStatistics {
+  line-height: 120%;
+  position: absolute;
+  width: 20%;
+}
+.playerStatistics .card-body {
+  height: 200px;
+}
+
+.filed {
+  width: 60%;
+  margin: auto;
+  position: relative;
+}
+.filed .cards {
+  text-transform: uppercase;
+}
+.filed .cards div {
+  position: absolute;
+  text-align: center;
+  border: 1px solid black;
+}
+.filed .cards .square {
+  height: 200px;
+  width: 200px;
+}
+.filed .cards .busToPark img {
+  position: relative;
+  top: 10px;
+  height: 180px;
+  align-content: center;
+}
+.filed .cards .skipMove img {
+  height: 200px;
+}
+.filed .cards .teleportation img {
+  position: relative;
+  top: 10px;
+  height: 180px;
+}
+.filed .cards .start img {
+  height: 195px;
+}
+.filed .cards .rectangle-v {
+  height: 200px;
+  width: 100px;
+}
+.filed .cards .rectangle-h {
+  height: 100px;
+  width: 200px;
+}
+.filed .cards .rectangle-h img {
+  height: 90px;
+  align-content: center;
+}
+.filed .cards .random-question img {
+  position: relative;
+  top: 50px;
+  width: 95px;
+  align-content: center;
+}
+.filed .dicePlaying {
+  position: absolute;
+  top: 336px;
+  left: 436px;
+}
+.filed .dicePlaying img {
+  display: none;
+}
+.filed .rollDice {
+  position: absolute;
+  background: #ffbd34;
+  top: 220px;
+  left: 220px;
+  width: 560px;
+  text-align: center;
+  display: none;
+}
+.filed .rollDice span {
+  text-transform: uppercase;
+  color: yellow;
+}
+.filed .question {
+  position: absolute;
+  top: 300px;
+  left: 250px;
+  visibility: hidden;
+}
+.filed .question input {
+  white-space: normal;
+  line-height: 100%;
+  font-size: 16px;
+  width: 100%;
+  height: 100%;
+}
+.filed .question div {
+  position: relative;
+  width: 225px;
+  height: 75px;
+  font-size: 24px;
+}
+.filed .question input {
+  border: 0;
+}
+.filed .question .question_1 {
+  width: 500px;
+  text-align: center;
+}
+.filed .question .answer_2 {
+  top: 50px;
+}
+.filed .question .answer_3 {
+  top: -150px;
+  left: 275px;
+}
+.filed .question .answer_4 {
+  top: -100px;
+  left: 275px;
+}
+.filed .endGame {
+  position: absolute;
+  top: 200px;
+  left: 200px;
+  margin-top: 23px;
+  margin-left: 44px;
+  display: none;
+}
+.filed .chips img {
+  width: 50px;
+  position: absolute;
+}
+.filed .firstPlayer {
+  display: none;
+}
+.filed .secondPlayer {
+  left: 150px;
+  display: none;
+}
+.filed .thirdPlayer {
+  top: 150px;
+  display: none;
+}
+.filed .fourthPlayer {
+  top: 150px;
+  left: 150px;
+  display: none;
+}
+
+.history {
+  background-color: yellow;
+}
+
+.biology {
+  background-color: green;
+}
+
+.geography {
+  background-color: turquoise;
+}
+
+.base {
+  background-color: white;
+}
+
+/*# sourceMappingURL=game.css.map */

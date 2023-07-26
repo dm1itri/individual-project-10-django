@@ -9,7 +9,7 @@ from django.views.generic import CreateView
 from django.db.models import Q
 
 from .forms import GameForm, RegisterUserForm, LoginUserForm
-from .models import Question, Game, Player
+from .models import Question, Game, Player, HistoryMove
 from .models import Game
 
 
@@ -59,12 +59,16 @@ class LoginUser(LoginView):
 
 
 class LogoutUser(LogoutView):
-    next_page = reverse_lazy('main_site:Главная')
+    next_page = reverse_lazy('main_site:Регистрация')
 
 
 @login_required()
 def index(request):
-    games = Game.objects.filter(Q(is_started=False) & (Q(datetime_creation__gt=(datetime.datetime.now() - datetime.timedelta(minutes=30))) | Q(first_player=Player.objects.get(user=request.user)))).all()
+    games = Game.objects.filter(Q(is_started=False) & (Q(datetime_creation__gt=(datetime.datetime.now() - datetime.timedelta(minutes=30)))
+                                                       | Q(first_player=Player.objects.get(user=request.user))
+                                                       | Q(second_player=Player.objects.get(user=request.user))
+                                                       | Q(third_player=Player.objects.get(user=request.user))
+                                                       | Q(fourth_player=Player.objects.get(user=request.user)))).all()
     for game in games:
         setattr(game, 'list_of_players', [game.first_player, game.second_player, game.third_player, game.fourth_player][:game.number_of_players])
         setattr(game, 'number_of_players', range(game.number_of_players))
@@ -72,8 +76,59 @@ def index(request):
 
 
 @login_required()
+def game(request, game_id):
+    player = Player.objects.get(user=request.user)
+    print(player.number_move)
+    response = render(request, 'main_site/game.html', {'title': 'Игра'})
+    response.set_cookie('number_move', str(player.number_move))
+    response.set_cookie('game_id', str(game_id))
+    return response
+
+
+@login_required()
 def dismiss(request):
     Game.objects.get(is_started=False, first_player=Player.objects.get(user=request.user)).delete()
+    return redirect('main_site:Главная')
+
+
+@login_required()
+def join_game(request, game_id):
+    game = get_object_or_404(Game, pk=game_id)
+    if game.number_of_players_connected < game.number_of_players:
+        player = Player.objects.get(user=request.user)
+        if game.number_of_players_connected == 1:
+            game.second_player = player
+        elif game.number_of_players_connected == 2:
+            game.third_player = player
+        else:
+            game.fourth_player = player
+        game.number_of_players_connected += 1
+        player.number_move = game.number_of_players_connected - 1
+        player.save()
+    if game.number_of_players_connected == game.number_of_players:
+        print('sdbfbxdc')
+        game.is_started = True
+        game.save()
+        null_history_move = HistoryMove(game_id=game, number_history=0, number_move=-1,  number_steps=0)
+        null_history_move.save()
+        return redirect('main_site:Игра', game_id)
+    game.save()
+    return redirect('main_site:Главная')
+
+
+@login_required()
+def leave_game(request, game_id):
+    player = Player.objects.get(user=request.user)
+    player.number_move = None
+    player.save()
+    game = Game.objects.get(id=game_id)
+    if game.second_player == player:
+        game.second_player = game.third_player
+        game.third_player = game.fourth_player
+    elif game.third_player == player:
+        game.third_player = game.fourth_player
+    game.fourth_player = None
+    game.save()
     return redirect('main_site:Главная')
 
 

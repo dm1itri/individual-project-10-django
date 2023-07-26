@@ -36,10 +36,11 @@ class Question(models.Model):
 
 
 class Game(models.Model):
-    current_player = models.IntegerField('Ходящий', default=0)
+    current_player = models.IntegerField('Ходящий', default=0, validators=[MinValueValidator(0), MaxValueValidator(3)])
     number_of_players = models.IntegerField('Количество игроков (2-4)', default=2, validators=[MinValueValidator(2), MaxValueValidator(4)])
     number_of_players_connected = models.IntegerField('Количество игроков (2-4) подключено', default=1, validators=[MinValueValidator(1), MaxValueValidator(4)])
     max_number_of_questions = models.IntegerField('Максимальное количество вопросов', default=10, validators=[MinValueValidator(10), MaxValueValidator(100), StepValueValidator(10)])
+    number_of_questions_answered = models.IntegerField('Кол-во отвеченных вопросов', default=0)
     question_id = models.IntegerField('ID вопроса', default=None, blank=True, null=True)
     is_started = models.BooleanField('Начата', default=False)
     is_over = models.BooleanField('Завершена', default=False)
@@ -78,14 +79,14 @@ class Player(models.Model):
     is_played = models.BooleanField('Играет', default=False)
     current_position = models.IntegerField('Текущее положение', default=0, validators=[MinValueValidator(0), MaxValueValidator(23)])
     number_move = models.IntegerField('Порядкойвый номер в текущей игре', default=0, validators=[MinValueValidator(0), MaxValueValidator(3)])
-    number_of_points = models.IntegerField('Количество очков', default=0)
-    number_of_questions_received = models.IntegerField('Кол-во ответов', default=0)
-    number_of_correct_answers = models.IntegerField('Кол-во верных ответов', default=0)
+    number_of_points = models.IntegerField('Количество очков', default=0, validators=[MinValueValidator(0), ])
+    number_of_questions_received = models.IntegerField('Кол-во ответов', default=0, validators=[MinValueValidator(0), ])
+    number_of_correct_answers = models.IntegerField('Кол-во верных ответов', default=0, validators=[MinValueValidator(0), ])
     skipping_move = models.BooleanField('Пропуск хода', default=False)
     thinks_about_the_question = models.BooleanField('Думает над вопросом', default=False)
 
     def __str__(self):
-        return f'<Игрок {self.id}> Позиция: {self.current_position} Пропускает ход: {self.skipping_move} Порядковый номер: {self.number_move} Занят: {self.is_occupied}'
+        return f'{self.user}'
 
     class Meta:
         verbose_name = 'игрок'

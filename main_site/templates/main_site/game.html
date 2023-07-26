@@ -1,0 +1,110 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }}</title>
+    <link rel="icon" href="{% static "image/icon.png" %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@600&family=Spectral:ital@1&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static "main_site/game.css" %}">
+</head>
+<body>
+    <nav class="playerStatistics">
+        <div id="0Player" class="card-body text-white bg-warning">
+                <h4>Первый игрок</h4>
+                <p>Количество перемещений <i id="0numberOfMoves"></i><br>
+                    Количество очков <i id="0numberOfPoints"></i><br>
+                    Получено вопросов <i id="0numberOfQuestionsReceived"></i><br>
+                    Верных ответов <i id="0percentOfCorrectAnswers"></i><br>
+        </div>
+        <div id="1Player" class="card-body text-white bg-success">
+                <h4>Второй игрок</h4>
+                <p>Количество перемещений <i id="1numberOfMoves"></i><br>
+                    Количество очков <i id="1numberOfPoints"></i><br>
+                    Получено вопросов <i id="1numberOfQuestionsReceived"></i><br>
+                    Вырных ответов <i id="1percentOfCorrectAnswers"></i><br>
+        </div>
+        <div id="2Player" class="card-body text-white bg-danger" style="display: none">
+                <h4>Третий игрок</h4>
+                <p>Количество перемещений <i id="2numberOfMoves"></i><br>
+                    Количество очков <i id="2numberOfPoints"></i><br>
+                    Получено вопросов <i id="2numberOfQuestionsReceived"></i><br>
+                    Верных ответов <i id="2percentOfCorrectAnswers"></i><br>
+        </div>
+        <div id="3Player" class="card-body text-white bg-info" style="display: none">
+                <h4>Четвертый игрок</h4>
+                <p>Количество перемещений <i id="3numberOfMoves"></i><br>
+                    Количество очков <i id="3numberOfPoints"></i><br>
+                    Получено вопросов <i id="3numberOfQuestionsReceived"></i><br>
+                    Верных ответов <i id="3percentOfCorrectAnswers"></i><br>
+        </div>
+    </nav>
+
+    <main class="filed">
+        <div class="cards">
+            <div id="cell0" class="square start"><img src="{% static "image/start.png" %}" alt="старт">старт</div>
+            <div id="cell1" class="rectangle-v history" style="left:200px">и</div>
+            <div id="cell2" class="rectangle-v biology" style="left:300px">б</div>
+            <div id="cell3" class="rectangle-v random-question" style="left:400px"><img src="{% static "image/questions.png" %}" alt="вопросы"></div>
+            <div id="cell4" class="rectangle-v geography" style="left:500px">г</div>
+            <div id="cell5" class="rectangle-v history" style="left:600px">и</div>
+            <div id="cell6" class="rectangle-v geography" style="left:700px">г</div>
+
+            <div id="cell7" class="square skipMove" style="left:800px"><img src="{% static "image/park.png" %}" alt="парк">парк</div>
+
+            <div id="cell8" class="rectangle-h geography" style="left:800px; top:200px">г</div>
+            <div id="cell9" class="rectangle-h lossPoint" style="left:800px; top:300px"><img src="{% static "image/skulls.png" %}" alt="скелет"></div>
+            <div id="cell10" class="rectangle-h biology" style="left:800px; top:400px">Б</div>
+            <div id="cell11" class="rectangle-h history" style="left:800px; top:500px">и</div>
+
+            <div id="cell12" class="square teleportation" style="left:800px; top:600px"><img src="{% static "image/portal.png" %}" alt="портал"></div>
+
+            <div id="cell13" class="rectangle-v geography" style="left:700px; top:600px">г</div>
+            <div id="cell14" class="rectangle-v biology" style="left:600px; top:600px">Б</div>
+            <div id="cell15" class="rectangle-v random-question" style="left:500px; top:600px"><img src="{% static "image/questions.png" %}" alt="вопросы"></div>
+            <div id="cell16" class="rectangle-v geography" style="left:400px; top:600px">Г</div>
+            <div id="cell17" class="rectangle-v biology" style="left:300px; top:600px">б</div>
+            <div id="cell18" class="rectangle-v history" style="left:200px; top:600px">и</div>
+
+            <div id="cell19" class="square busToPark" style="top:600px"><img src="{% static "image/bus.png" %}" alt="автобус"></div>
+
+            <div id="cell20" class="rectangle-h geography" style="top:500px">г</div>
+            <div id="cell21" class="rectangle-h addingPoint" style="top:400px"><img src="{% static "image/gift.png" %}" alt="подарок"></div>
+            <div id="cell22" class="rectangle-h biology" style="top:300px">б</div>
+            <div id="cell23" class="rectangle-h history" style="top:200px">и</div>
+        </div>
+        <div id="rollDice" class="rollDice">
+            <h4>Ходит <span id="numberPlayer">желтый</span></h4>
+            <div id="buttonDicePlaying"><input type="button" onclick="dicePlaying()" value="бросить кубики"></div>
+        </div>
+
+        <div class="dicePlaying">
+            <img id="dicePlaying1" src="{% static "image/dice_1.png" %}" alt="1">
+            <img id="dicePlaying2" src="{% static "image/dice_2.png" %}" alt="2">
+            <img id="dicePlaying3" src="{% static "image/dice_3.png" %}" alt="3">
+            <img id="dicePlaying4" src="{% static "image/dice_4.png" %}" alt="4">
+            <img id="dicePlaying5" src="{% static "image/dice_5.png" %}" alt="5">
+            <img id="dicePlaying6" src="{% static "image/dice_6.png" %}" alt="6">
+        </div>
+        <div id="question" class="question">
+            <h4 id="question_1" class="question_1">Зачем ты в это играешь?</h4>
+            <div id="answer_1" class="answer_1"><input id="btn_answer_1" type="button" onclick="choosingAnswer(1)" value=""></div>
+            <div id="answer_2" class="answer_2"><input id="btn_answer_2" type="button" onclick="choosingAnswer(2)" value=""></div>
+            <div id="answer_3" class="answer_3"><input id="btn_answer_3" type="button" onclick="choosingAnswer(3)" value=""></div>
+            <div id="answer_4" class="answer_4"><input id="btn_answer_4" type="button" onclick="choosingAnswer(4)" value=""></div>
+        </div>
+        <div class="chips">
+            <img id="0_Player" class="firstPlayer" src="{% static "image/car_1.png" %}" alt="firstPlayer">
+            <img id="1_Player" class="secondPlayer" src="{% static "image/car_2.png" %}" alt="secondPlayer">
+            <img id="2_Player" class="thirdPlayer" src="{% static "image/car_3.png" %}" alt="thirdPlayer">
+            <img id="3_Player" class="fourthPlayer" src="{% static "image/car_4.png" %}" alt="fourthPlayer">
+        </div>
+        <img id="endGame" class="endGame" src="{% static "image/game-over-2.png" %}" alt="Конец игры">
+    </main>
+
+    <script src="{% static "main_site/dicePlaying.js" %}"></script>
+</body>
+</html>
