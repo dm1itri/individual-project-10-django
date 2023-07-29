@@ -1,5 +1,5 @@
 import datetime
-
+from openpyxl import load_workbook
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView, LoginView
@@ -29,6 +29,9 @@ class CreateGame(CreateView):
         if is_playing:
             return super().form_invalid(form)
         form.instance.first_player = player
+        player.clear_after_game()
+        player.is_played = True
+        player.save()
         return super().form_valid(form)
 
 
@@ -78,7 +81,6 @@ def index(request):
 @login_required()
 def game(request, game_id):
     player = Player.objects.get(user=request.user)
-    print(player.number_move)
     response = render(request, 'main_site/game.html', {'title': 'Игра'})
     response.set_cookie('number_move', str(player.number_move))
     response.set_cookie('game_id', str(game_id))
@@ -87,7 +89,8 @@ def game(request, game_id):
 
 @login_required()
 def dismiss(request):
-    Game.objects.get(is_started=False, first_player=Player.objects.get(user=request.user)).delete()
+    player = Player.objects.get(user=request.user)
+    Game.objects.get(is_started=False, first_player=player).delete()
     return redirect('main_site:Главная')
 
 
@@ -103,10 +106,10 @@ def join_game(request, game_id):
         else:
             game.fourth_player = player
         game.number_of_players_connected += 1
+        player.clear_after_game()
         player.number_move = game.number_of_players_connected - 1
         player.save()
     if game.number_of_players_connected == game.number_of_players:
-        print('sdbfbxdc')
         game.is_started = True
         game.save()
         null_history_move = HistoryMove(game_id=game, number_history=0, number_move=-1,  number_steps=0)
@@ -119,8 +122,6 @@ def join_game(request, game_id):
 @login_required()
 def leave_game(request, game_id):
     player = Player.objects.get(user=request.user)
-    player.number_move = None
-    player.save()
     game = Game.objects.get(id=game_id)
     if game.second_player == player:
         game.second_player = game.third_player

@@ -6,34 +6,9 @@
 {% endblock head %}
 
 {% block div_body %}
-    <main class="container  align-items-center">
-    {% for game in games %}
-        <div class="row row-cols-5 gameroom">
-            {% for player in game.list_of_players %}
+    {{ request.user.id|json_script:"user_id" }}
+    <main class="container  align-items-center" id="main">
 
-                  <div class="col">
-                        {% if player != None %}
-                            <img src="{% static "image/astronaut.png"%}" class="rounded-circle" alt="Аватарка"><br>
-                            <a class="btn btn-secondary" href="{% url "main_site:Профиль игрока" %}">{{ player.user }}</a>
-                        {% else %}
-                            <img src="{% static "image/add.png"%}" class="rounded-circle" alt="Присоединиться"><br>
-                            <a class="btn btn-secondary" href="{% url "main_site:Присоединиться к игре" game.id %}">Свободно</a>
-                        {% endif %}
-                  </div>
-            {% endfor %}
-            {% if game.first_player == this_player %}
-                <form action="{% url 'main_site:Распустить игровую комнату до старта' %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="dismiss" class="btn btn-danger">Распустить</button>
-                </form>
-            {% endif %}
-            {% if game.second_player == this_player or game.third_player == this_player or game.fourth_player == this_player %}
-                <form action="{% url 'main_site:Покинуть игру' game.id %}" method="post">
-                    {% csrf_token %}
-                    <button type="submit" name="dismiss" class="btn btn-danger">Покинуть комнату</button>
-                </form>
-            {% endif %}
-        </div>
-    {% endfor %}
+    <script src="{% static "main_site/main.js" %}"></script>
     </main>
 {% endblock div_body %}

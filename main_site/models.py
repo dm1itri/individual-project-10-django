@@ -85,6 +85,18 @@ class Player(models.Model):
     skipping_move = models.BooleanField('Пропуск хода', default=False)
     thinks_about_the_question = models.BooleanField('Думает над вопросом', default=False)
 
+    def clear_after_game(self):
+        self.is_played = False
+        self.current_position = 0
+        self.number_move = 0
+        self.number_of_points = 0
+        self.number_of_questions_received = 0
+        self.number_of_correct_answers = 0
+        self.skipping_move = False
+        self.thinks_about_the_question = False
+        self.save()
+
+
     def __str__(self):
         return f'{self.user}'
 

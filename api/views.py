@@ -1,9 +1,14 @@
 from random import choice
 
+from rest_framework import status
+from rest_framework.fields import ListField
+from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+
+from api.serializers import GamesSerializer
 from main_site.models import Game, HistoryMove, Question
-from django.db.models import Q
+from django.db.models import Q, Value
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 from main_site.models import Player
@@ -18,9 +23,6 @@ class MyAPIView(APIView):
         game_id = request.COOKIES.get('game_id')
         self.game = Game.objects.get(id=game_id)
         self.players = [self.game.first_player, self.game.second_player, self.game.third_player, self.game.fourth_player]
-
-    def put(self, request):
-        self.get(request)
 
 
 class PlayersAPIView(MyAPIView):
@@ -39,7 +41,7 @@ class PlayersAPIView(MyAPIView):
                                        'skipping_move': players[i].skipping_move,
                                        'thinks_about_the_question': players[i].thinks_about_the_question}
         if response['question_id']:
-            response['question'] = Question.objects.get(response['question_id']).to_dict(only=('question', 'answer_correct', 'answer_2', 'answer_3', 'answer_4'))
+            response['question'] = model_to_dict(Question.objects.get(id=response['question_id']), fields=['question', 'answer_correct', 'answer_2', 'answer_3', 'answer_4'])
         return Response(response)
 
 
@@ -51,13 +53,14 @@ class GameAPIView(MyAPIView):
         return JsonResponse(model_to_dict(self.game, fields=['current_player', 'question_id', 'is_over']) |
                             model_to_dict(current_player, fields=['thinks_about_the_question', ]))
 
-    def put(self, request):
-        super().put(request)
-        current_player = int(self.request.GET['current_player'])
-        current_position = int(self.request.GET['current_position'])
-        skipping_move = int(self.request.GET['skipping_move'])
-        number_of_points = int(self.request.GET['number_of_points'])
-        thinks_about_the_question = int(self.request.GET['thinks_about_the_question'])
+    def post(self, request):
+        super().get(request)
+        print('ndfzpobnsf')
+        current_player = int(self.request.data['current_player'])
+        current_position = int(self.request.data['current_position'])
+        skipping_move = int(self.request.data['skipping_move'])
+        number_of_points = int(self.request.data['number_of_points'])
+        thinks_about_the_question = int(self.request.data['thinks_about_the_question'])
 
         player = self.players[self.game.current_player]
         player.current_position = current_position
@@ -85,6 +88,7 @@ class GameAPIView(MyAPIView):
             self.game.question_id = None
             player.save()
             self.game.save()
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class HistoryAPIView(MyAPIView):
@@ -97,33 +101,36 @@ class HistoryAPIView(MyAPIView):
             move = HistoryMove.objects.filter(game_id=self.game.id).order_by('-number_history').first()
         if move:
             return JsonResponse(model_to_dict(move, fields=['number_history', 'number_move', 'number_steps']))
-        return JsonResponse({'response': None})
+        return JsonResponse(None, safe=False)  # safe=False позволяет передавать не только dict
 
-    def put(self, request):
-        super().put(request)
-        number_move = int(self.request.GET['number_move'])
-        number_steps = int(self.request.GET['number_steps'])
-        history = HistoryMove()
-        history.game_id = self.game
-        history.number_history = HistoryMove.objects.filter(game_id=self.game.id).order_by('-number_history').first().number_history + 1
-        history.number_move = number_move
-        history.number_steps = number_steps
-        history.save()
+    def post(self, request):
+        super().get(request)
+        number_move = int(self.request.data['number_move'])
+        number_steps = int(self.request.data['number_steps'])
+        HistoryMove.objects.create(
+            game_id=self.game,
+            number_history=HistoryMove.objects.filter(game_id=self.game.id).order_by('-number_history').first().number_history + 1,
+            number_move=number_move,
+            number_steps=number_steps
+        )
+        return Response(status=status.HTTP_201_CREATED)
 
 
 class QuestionAPIView(MyAPIView):
     def get(self, request):
         super().get(request)
-        type_question = self.request.GET['type_question']
+        type_question = self.request.query_params['type_question']
         if type_question == 'Случайный':
             type_question = choice(['Биология', 'История', 'География'])
-        question = choice(Question.objects.filter(type_question=type_question).all())
+        question = choice(Question.objects.filter(type_question=type_question[0]).all())
+
         game = Game.objects.get(id=self.game.id)
         game.question_id = question.id
-        player = [game.first_player, game.second_player, game.third_player, game.fourth_player][game.current_player]
+        player = self.players[game.current_player]
         player.number_of_questions_received += 1
         game.save()
         player.save()
+        return JsonResponse(model_to_dict(question, fields=['question', 'answer_correct', 'answer_2', 'answer_3', 'answer_4']))
 
 
 class PlayersStaticsAPIView(MyAPIView):
@@ -136,3 +143,16 @@ class PlayersStaticsAPIView(MyAPIView):
                                       'percent_of_correct_answers': f'{round(player.number_of_correct_answers / player.number_of_questions_received * 100if player.number_of_questions_received else 0)}%',
                                       **model_to_dict(player, fields=['number_of_points', 'number_of_questions_received'])}
         return JsonResponse(players_statics)
+
+
+class GamesAPIView(ListAPIView):
+    queryset = Game.objects.filter(is_started=False).all()
+    serializer_class = GamesSerializer
+
+
+class MyGameAPIView(APIView):
+    def get(self, *args, **kwargs):
+        user_id = kwargs.get('user_id')
+        game = Game.objects.filter((Q(first_player__user__id=user_id) | Q(second_player__user__id=user_id) |
+                                    Q(third_player__user__id=user_id) | Q(fourth_player__user_id=user_id)) & Q(is_started=True) & Q(is_over=False)).first()
+        return JsonResponse(model_to_dict(game))

@@ -11,6 +11,8 @@ const baseURL = 'http://127.0.0.1:8000' //'http://localhost:8001'   //
 let answerCorrect, currentPlayer, numberHistory
 let playersCoords = []
 let thisPlayer = Number(document.cookie.match(/number_move=(.+?)(;|$)/)[1])
+const csrftoken = String(document.cookie.match(/csrftoken=(.+?)(;|$)/)[1])
+
 
 function getPlayersStatics() {
     fetch(`${baseURL}/api/players_statics`)
@@ -42,35 +44,43 @@ function getCurrentPlayer() {
     xhr.send()
     return currPlayer
 }
-function putCurrentPLayer(skipMove, currentPlayer, playerCoords, numberOfPoints, thinksAboutTheQuestion) {
-    let data = new FormData()
-    data.append('current_player',  currentPlayer)
-    data.append('current_position', playerCoords)
-    data.append('skipping_move', skipMove)
-    data.append('number_of_points', numberOfPoints)
-    data.append('thinks_about_the_question', thinksAboutTheQuestion)
+function postCurrentPLayer(skipMove, currentPlayer, playerCoords, numberOfPoints, thinksAboutTheQuestion) {
+    const data = {
+        'current_player': currentPlayer,
+        'current_position': playerCoords,
+        'skipping_move': skipMove,
+        'number_of_points': numberOfPoints,
+        'thinks_about_the_question': thinksAboutTheQuestion
+    }
     let xhr = new XMLHttpRequest()
     xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status !== 200) {
             console.log(xhr.status)
         }
     }
-    xhr.open('PUT', `${baseURL}/api/game`, false)
-    xhr.send(data)
+    xhr.open('POST', `${baseURL}/api/game`, false)
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+    xhr.send(JSON.stringify(data))
 }
-function putHistoryMove(currentPlayer, numberSteps) {
-    let data = new FormData()
-    data.append('number_move',  currentPlayer)
-    data.append('number_steps', numberSteps)
+function postHistoryMove(currentPlayer, numberSteps) {
+    const data = {
+        'number_move': currentPlayer,
+        'number_steps': numberSteps
+    }
     let xhr = new XMLHttpRequest();
     xhr.onreadystatechange = function() {
         if (xhr.readyState === XMLHttpRequest.DONE && xhr.status !== 200) {
                 console.log(xhr.status)
         }
     }
-    xhr.open('PUT', `${baseURL}/api/history_game`, false)
-    xhr.send(data)
+    xhr.open('POST', `${baseURL}/api/history_game`, false)
+    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8")
+    xhr.setRequestHeader("X-CSRFToken", csrftoken)
+    xhr.send(JSON.stringify(data))
 }
+
+
 function getHistoryMove(numberHistory) {
     let xhr = new XMLHttpRequest()
     let history
@@ -185,14 +195,14 @@ function checkSquareCards(numberPlayer) {
     if (playersCoords[numberPlayer] === 12) {
         let countSteps = randomIntFromInterval(1, 23)
         setTimeout(rollDice, 1000, numberPlayer, playersCoords[numberPlayer], countSteps)
-        putHistoryMove(currentPlayer, countSteps)
+        postHistoryMove(currentPlayer, countSteps)
         playersCoords[numberPlayer] = (countSteps + playersCoords[numberPlayer]) % 24
         numberHistory += 1
     }
     if (playersCoords[numberPlayer] === 19) {
         setTimeout(rollDice, 2000, numberPlayer, playersCoords[numberPlayer], 12)
         // 2000 таймаут поставлен, т.к. если попадет сюда с телепорта, то не будет видно перемещение сюда, а сразу в парк
-        putHistoryMove(currentPlayer, 12)
+        postHistoryMove(currentPlayer, 12)
         playersCoords[numberPlayer] = 7
         numberHistory += 1
     }
@@ -245,7 +255,7 @@ async function choosingAnswer(numberChoosingAnswer) {
 
 async function move(numberPlayer, numberSteps) {
     let typeQuestion
-    putHistoryMove(numberPlayer, numberSteps)
+    postHistoryMove(numberPlayer, numberSteps)
     numberHistory += 1
     playersCoords[numberPlayer] = rollDice(numberPlayer, playersCoords[numberPlayer], numberSteps)
     let skippingMove = checkSquareCards(numberPlayer)
@@ -269,7 +279,7 @@ async function move(numberPlayer, numberSteps) {
 }
 
 async function endMoveAndAnswer(numberPlayer, skipMove, playerCoords, numberOfPoints, thinksAboutTheQuestion) {
-    putCurrentPLayer(skipMove, numberPlayer, playerCoords, numberOfPoints, thinksAboutTheQuestion)
+    postCurrentPLayer(skipMove, numberPlayer, playerCoords, numberOfPoints, thinksAboutTheQuestion)
     //currentPlayer = getCurrentPlayer()['current_player']
     //updateDocument(currentPlayer, thinksAboutTheQuestion)
     if (!thinksAboutTheQuestion) {
