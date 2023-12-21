@@ -26,7 +26,11 @@
         </ul>
         <div class="col-md-3 text-end">
         {% if request.user.is_authenticated %}
-            <a href="{% url 'main_site:Выход' %}" type="button" class="btn btn-outline-primary me-2">Выйти</a>
+            <form method="post" action="{% url 'main_site:Выход' %}" style="display: inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-outline-primary me-2">Выйти</button>
+            </form>
+
             <a href="{% url 'main_site:Профиль игрока' %}" type="button" class="btn btn-primary">{{user.username}}</a>
         {% else %}
             <a href="{% url 'main_site:Вход' %}" type="button" class="btn btn-outline-primary me-2">Войти</a>
