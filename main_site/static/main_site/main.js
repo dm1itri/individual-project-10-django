@@ -2,7 +2,7 @@ const baseURL = 'http://127.0.0.1:8000'
 const user_id = JSON.parse(document.getElementById('user_id').textContent)
 const csrftoken = String(document.cookie.match(/csrftoken=(.+?)(;|$)/)[1])
 let lastGames
-
+const TIMEOUT = 1000
 
 function getMyGame() {
     fetch(`${baseURL}/api/mygame/${user_id}`)
@@ -102,6 +102,6 @@ function dismiss() {
 
 
 document.body.onload = getGames
-setInterval(getGames, 10000)
-setInterval(getMyGame, 10000)
+setInterval(getGames, TIMEOUT)
+setInterval(getMyGame, TIMEOUT)
 

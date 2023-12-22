@@ -228,11 +228,14 @@ function updateDocument(currentPlayer, thinksAboutTheQuestion=false, gameIsOver)
 function updateQuestion(question) {
     answerCorrect = randomIntFromInterval(1, 4)
     document.getElementById("question_1").innerText = question['question']
+    document.getElementById(`btn_answer_1`).disabled = false
     for (let i=2; i < 5; i++) {
         document.getElementById(`btn_answer_${i}`).value = question[`answer_${i}`]
+        document.getElementById(`btn_answer_${i}`).disabled = false
     }
     if (answerCorrect !== 1) {
         document.getElementById(`btn_answer_1`).value = question[`answer_${answerCorrect}`]
+
     }
     document.getElementById(`btn_answer_${answerCorrect}`).value = question[`answer_correct`]
     document.getElementById("question").style.visibility = 'visible'
@@ -240,6 +243,9 @@ function updateQuestion(question) {
 
 async function choosingAnswer(numberChoosingAnswer) {
     let point = 1
+    for (let i=1; i<5; i++){
+        document.getElementById(`btn_answer_${i}`).disabled = true
+    }
     document.getElementById(`btn_answer_${answerCorrect}`).style.background = 'rgba(0,255,0,0.71)'
     if (numberChoosingAnswer !== answerCorrect) {
         point = 0

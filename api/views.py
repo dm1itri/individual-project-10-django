@@ -140,13 +140,14 @@ class PlayersStaticsAPIView(MyAPIView):
         players = self.players[:self.game.number_of_players]
         for index, player in enumerate(players):
             players_statics[index] = {'numbers_of_moves': HistoryMove.objects.filter(game_id=self.game.id, number_move=index).count(),
-                                      'percent_of_correct_answers': f'{round(player.number_of_correct_answers / player.number_of_questions_received * 100if player.number_of_questions_received else 0)}%',
+                                      'percent_of_correct_answers': f'{round(player.number_of_correct_answers / player.number_of_questions_received * 100 if player.number_of_questions_received else 0)}%',
                                       **model_to_dict(player, fields=['number_of_points', 'number_of_questions_received'])}
         return JsonResponse(players_statics)
 
 
 class GamesAPIView(ListAPIView):
     queryset = Game.objects.filter(is_started=False).all()
+    print(queryset)
     serializer_class = GamesSerializer
 
 
@@ -154,5 +155,7 @@ class MyGameAPIView(APIView):
     def get(self, *args, **kwargs):
         user_id = kwargs.get('user_id')
         game = Game.objects.filter((Q(first_player__user__id=user_id) | Q(second_player__user__id=user_id) |
-                                    Q(third_player__user__id=user_id) | Q(fourth_player__user_id=user_id)) & Q(is_started=True) & Q(is_over=False)).first()
-        return JsonResponse(model_to_dict(game))
+                                    Q(third_player__user__id=user_id) | Q(fourth_player__user_id=user_id)) & Q(is_started=False) & Q(is_over=False)).first()
+        if game:
+            return JsonResponse(model_to_dict(game))
+        return
