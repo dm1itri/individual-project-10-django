@@ -61,13 +61,13 @@ class Game(models.Model):
 
 class HistoryMove(models.Model):
     number_history = models.IntegerField('Номер истории', default=0, validators=[MinValueValidator(0)])
-    number_move = models.IntegerField('Номер ходящего', default=-1, validators=[MinValueValidator(-1)])
+    number_move = models.IntegerField('Номер ходящего', default=-1, validators=[MinValueValidator(-1), MaxValueValidator(3)])
     number_steps = models.IntegerField('Количество шагов', default=0, validators=[MinValueValidator(0), MaxValueValidator(23)])
     game_id = models.ForeignKey('Game', on_delete=models.CASCADE)
     datetime_addition = models.DateTimeField('Время добавления', default=timezone.now)
 
     def __str__(self):
-        return f'<История {self.id}> ID игры: {self.game_id.id} Номер истории: {self.number_history} Номер ходяшего: {self.number_move} Количество шагов: {self.number_steps}'
+        return f'<История {self.number_history}> игры {self.game_id.id}'
 
     class Meta:
         verbose_name = 'история'
@@ -80,12 +80,19 @@ class Player(models.Model):
     current_position = models.IntegerField('Текущее положение', default=0, validators=[MinValueValidator(0), MaxValueValidator(23)])
     number_move = models.IntegerField('Порядкойвый номер в текущей игре', default=0, validators=[MinValueValidator(0), MaxValueValidator(3)])
     number_of_points = models.IntegerField('Количество очков', default=0, validators=[MinValueValidator(0), ])
-    number_of_questions_received = models.IntegerField('Кол-во ответов', default=0, validators=[MinValueValidator(0), ])
-    number_of_correct_answers = models.IntegerField('Кол-во верных ответов', default=0, validators=[MinValueValidator(0), ])
+    number_of_questions_received = models.IntegerField('Кол-во вопросов', default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
+    number_of_correct_answers = models.IntegerField('Кол-во верных ответов', default=0, validators=[MinValueValidator(0), MaxValueValidator(100)])
     skipping_move = models.BooleanField('Пропуск хода', default=False)
     thinks_about_the_question = models.BooleanField('Думает над вопросом', default=False)
+    global_number_games = models.IntegerField('Количество игр', default=0, validators=[MinValueValidator(0)])
+    global_number_of_questions_received = models.IntegerField('Общее количество полученных вопросов', default=0, validators=[MinValueValidator(0)])
+    global_number_of_correct_answers = models.IntegerField('Общее кол-во верных ответов', default=0, validators=[MinValueValidator(0), ])
 
     def clear_after_game(self):
+        self.global_number_games += 1
+        self.global_number_of_questions_received += self.number_of_questions_received
+        self.global_number_of_correct_answers += self.number_of_correct_answers
+
         self.is_played = False
         self.current_position = 0
         self.number_move = 0
@@ -95,7 +102,6 @@ class Player(models.Model):
         self.skipping_move = False
         self.thinks_about_the_question = False
         self.save()
-
 
     def __str__(self):
         return f'{self.user}'

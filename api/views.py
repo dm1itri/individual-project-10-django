@@ -72,6 +72,9 @@ class GameAPIView(MyAPIView):
             self.game.number_of_questions_answered += 1
             if self.game.number_of_questions_answered == self.game.max_number_of_questions:
                 self.game.is_over = True
+                for i in [self.game.first_player, self.game.second_player, self.game.third_player, self.game.fourth_player]:
+                    if i:
+                        i.clear_after_game()
         self.game.save()
         player.save()
         if not player.thinks_about_the_question and not self.game.is_over:

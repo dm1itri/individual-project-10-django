@@ -29,7 +29,6 @@ class CreateGame(CreateView):
         if is_playing:
             return super().form_invalid(form)
         form.instance.first_player = player
-        player.clear_after_game()
         player.is_played = True
         player.save()
         return super().form_valid(form)
@@ -97,10 +96,9 @@ def dismiss(request):
 @login_required()
 def leave_started_game(request, game_id):
     player = Player.objects.get(user=request.user)
-    print(game_id)
     game = Game.objects.get(id=game_id)
-    print(game)
     if player in [game.first_player, game.second_player, game.third_player, game.fourth_player] and game.is_started:
+        player.clear_after_game()
         game.is_over = True
         game.save()
         return redirect('main_site:Главная')
@@ -119,7 +117,6 @@ def join_game(request, game_id):
             case 3:
                 game.fourth_player = player
         game.number_of_players_connected += 1
-        player.clear_after_game()
         player.number_move = game.number_of_players_connected - 1
         player.save()
     if game.number_of_players_connected == game.number_of_players:
@@ -148,5 +145,11 @@ def leave_game(request, game_id):
 
 @login_required()
 def profile_player(request):
-    return render(request, 'main_site/base.html', {'title': 'Профиль игрока'})
+    player = Player.objects.get(user=request.user)
+    context = {'title': 'Профиль игрока',
+               'date_joined': request.user.date_joined.strftime('%d.%m.%Y\n%H:%M'),
+               'winning_percentage': int(player.global_number_of_correct_answers / player.global_number_of_questions_received * 100) if player.global_number_of_questions_received else 0,
+               'games': player.global_number_games,
+               'questions_received': player.global_number_of_questions_received}
+    return render(request, 'main_site/profile.html', context=context)
 
