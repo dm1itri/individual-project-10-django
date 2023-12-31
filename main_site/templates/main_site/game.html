@@ -96,11 +96,8 @@
             <div id="answer_3" class="answer_3"><input id="btn_answer_3" type="button" onclick="choosingAnswer(3)" value=""></div>
             <div id="answer_4" class="answer_4"><input id="btn_answer_4" type="button" onclick="choosingAnswer(4)" value=""></div>
         </div>
-        <div class="chips">
-            <img id="0_Player" class="firstPlayer" src="{% static "image/car_1.png" %}" alt="firstPlayer">
-            <img id="1_Player" class="secondPlayer" src="{% static "image/car_2.png" %}" alt="secondPlayer">
-            <img id="2_Player" class="thirdPlayer" src="{% static "image/car_3.png" %}" alt="thirdPlayer">
-            <img id="3_Player" class="fourthPlayer" src="{% static "image/car_4.png" %}" alt="fourthPlayer">
+        <div id="chips" class="chips">
+
         </div>
         <a href="{% url 'main_site:Главная' %}"><img id="endGame" class="endGame" src="{% static "image/game-over-2.png" %}" alt="Конец игры"></a>
     </main>

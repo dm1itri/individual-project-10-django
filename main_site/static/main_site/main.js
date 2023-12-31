@@ -55,16 +55,14 @@ function displayGames(games) {
                     img.alt = 'Аватарка'
                     a.text = player['user']['username']
                     a.href = baseURL + "/profile_player"
-                    divCol.appendChild(img)
-                    divCol.appendChild(a)
                 } else {
                     img.src = 'static/image/add.png'
                     img.alt = 'Присоединиться'
                     a.text = 'Свободно'
                     a.href = baseURL + `/join_game/${game['id']}`
-                    divCol.appendChild(img)
-                    divCol.appendChild(a)
                 }
+                divCol.appendChild(img)
+                divCol.appendChild(a)
                 divRow.appendChild(divCol)
                 if (player !== null) {
                     if (player['user']['id'] === user_id) {

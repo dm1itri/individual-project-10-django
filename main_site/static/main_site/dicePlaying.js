@@ -10,8 +10,30 @@ const enNamePlayers = ['yellow', 'green', 'red', 'blue']
 const baseURL = 'http://127.0.0.1:8000' //'http://localhost:8001'   //
 let answerCorrect, currentPlayer, numberHistory
 let playersCoords = []
-let thisPlayer = Number(document.cookie.match(/number_move=(.+?)(;|$)/)[1])
+const thisPlayer = Number(document.cookie.match(/number_move=(.+?)(;|$)/)[1])  // 0-3
 const csrftoken = String(document.cookie.match(/csrftoken=(.+?)(;|$)/)[1])
+const thisGame =  Number(window.location.href.substring(window.location.href.lastIndexOf('/')+1))
+
+
+function updateIconThisUser(){
+    const sp = ['first', 'second', 'third', 'fourth']
+    let chips = document.getElementById('chips')
+    for (let i = 0; i < 4; i++) {
+        img = document.createElement('img')
+        img.id = i + '_Player'
+        img.className = sp[i] + 'Player'
+        img.alt = sp[i] + 'Player'
+        img.src = baseURL + '/static/image/car_' + (i + 1) + '.png'
+        if (thisPlayer === i) {
+            let a = document.createElement("a")
+            a.href = baseURL + '/leave_started_game/' + thisGame
+            a.appendChild(img)
+            chips.appendChild(a)
+        } else {
+            chips.appendChild(img)
+        }
+    }
+}
 
 
 function getPlayersStatics() {
@@ -322,4 +344,5 @@ async function waiting_move() {
 }
 
 
+updateIconThisUser()
 getCurrentPlayers()

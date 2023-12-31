@@ -95,16 +95,29 @@ def dismiss(request):
 
 
 @login_required()
+def leave_started_game(request, game_id):
+    player = Player.objects.get(user=request.user)
+    print(game_id)
+    game = Game.objects.get(id=game_id)
+    print(game)
+    if player in [game.first_player, game.second_player, game.third_player, game.fourth_player] and game.is_started:
+        game.is_over = True
+        game.save()
+        return redirect('main_site:Главная')
+
+
+@login_required()
 def join_game(request, game_id):
     game = get_object_or_404(Game, pk=game_id)
     if game.number_of_players_connected < game.number_of_players:
         player = Player.objects.get(user=request.user)
-        if game.number_of_players_connected == 1:
-            game.second_player = player
-        elif game.number_of_players_connected == 2:
-            game.third_player = player
-        else:
-            game.fourth_player = player
+        match game.number_of_players_connected:
+            case 1:
+                game.second_player = player
+            case 2:
+                game.third_player = player
+            case 3:
+                game.fourth_player = player
         game.number_of_players_connected += 1
         player.clear_after_game()
         player.number_move = game.number_of_players_connected - 1

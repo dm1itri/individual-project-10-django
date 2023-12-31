@@ -155,7 +155,7 @@ class MyGameAPIView(APIView):
     def get(self, *args, **kwargs):
         user_id = kwargs.get('user_id')
         game = Game.objects.filter((Q(first_player__user__id=user_id) | Q(second_player__user__id=user_id) |
-                                    Q(third_player__user__id=user_id) | Q(fourth_player__user_id=user_id)) & Q(is_started=False) & Q(is_over=False)).first()
+                                    Q(third_player__user__id=user_id) | Q(fourth_player__user_id=user_id)) & Q(is_over=False)).first()
         if game:
             return JsonResponse(model_to_dict(game))
-        return
+        return Response(status=status.HTTP_404_NOT_FOUND)
