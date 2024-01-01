@@ -1,6 +1,4 @@
-from django.http import request
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from .views import *
 from django.contrib.auth.decorators import login_required
 app_name = 'main_site'

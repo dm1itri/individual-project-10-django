@@ -1,9 +1,5 @@
-from django.http import request
 from django.urls import path
-from django.contrib.auth import views as auth_views
-from django.contrib.auth.decorators import login_required
-
-from .views import PlayersAPIView, GameAPIView, HistoryAPIView, QuestionAPIView, PlayersStaticsAPIView, GamesAPIView, MyGameAPIView
+from .views import *
 
 app_name = 'api'
 urlpatterns = [

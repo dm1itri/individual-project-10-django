@@ -1,7 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, BaseUserCreationForm, AuthenticationForm
-from django.contrib.auth.models import User
-from django.http import request
+from django.contrib.auth.forms import BaseUserCreationForm, AuthenticationForm
 
 from .models import *
 

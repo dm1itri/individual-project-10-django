@@ -19,7 +19,7 @@ function updateIconThisUser(){
     const sp = ['first', 'second', 'third', 'fourth']
     let chips = document.getElementById('chips')
     for (let i = 0; i < 4; i++) {
-        img = document.createElement('img')
+        let img = document.createElement('img')
         img.id = i + '_Player'
         img.className = sp[i] + 'Player'
         img.alt = sp[i] + 'Player'
@@ -288,7 +288,7 @@ async function move(numberPlayer, numberSteps) {
     playersCoords[numberPlayer] = rollDice(numberPlayer, playersCoords[numberPlayer], numberSteps)
     let skippingMove = checkSquareCards(numberPlayer)
     if (skippingMove === 0 && questionCards.includes(playersCoords[numberPlayer])) {
-        endMoveAndAnswer(numberPlayer, skippingMove, playersCoords[numberPlayer], 0, 1)
+        await endMoveAndAnswer(numberPlayer, skippingMove, playersCoords[numberPlayer], 0, 1)
         if (questionBiologyCards.includes(playersCoords[numberPlayer])){
             typeQuestion = 'Биология'
         } else if (questionHistoryCards.includes(playersCoords[numberPlayer])) {
@@ -302,14 +302,12 @@ async function move(numberPlayer, numberSteps) {
     }
     else {
         let point = playersCoords[numberPlayer] === 21 ? 1: playersCoords[numberPlayer] === 9 ?-1:0
-        endMoveAndAnswer(numberPlayer, skippingMove, playersCoords[numberPlayer], point, 0)
+        await endMoveAndAnswer(numberPlayer, skippingMove, playersCoords[numberPlayer], point, 0)
     }
 }
 
 async function endMoveAndAnswer(numberPlayer, skipMove, playerCoords, numberOfPoints, thinksAboutTheQuestion) {
     postCurrentPLayer(skipMove, numberPlayer, playerCoords, numberOfPoints, thinksAboutTheQuestion)
-    //currentPlayer = getCurrentPlayer()['current_player']
-    //updateDocument(currentPlayer, thinksAboutTheQuestion)
     if (!thinksAboutTheQuestion) {
         await waiting_move()
     }

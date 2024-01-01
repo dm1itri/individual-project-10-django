@@ -1,6 +1,4 @@
 from django.db import models
-from django.http import request
-from django.urls import reverse
 from django.utils import timezone
 from django.core.validators import MaxValueValidator, MinValueValidator, StepValueValidator
 from django.contrib.auth.models import User
@@ -52,7 +50,6 @@ class Game(models.Model):
 
     def __str__(self):
         return f'<Игра {self.id}> Текущий игрок: {self.current_player} Количество игроков: {self.number_of_players}'
-
 
     class Meta:
         verbose_name = 'игра'

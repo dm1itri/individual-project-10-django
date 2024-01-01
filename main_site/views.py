@@ -1,15 +1,14 @@
-import datetime
-from openpyxl import load_workbook
+from datetime import datetime, timedelta
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView, LoginView
-from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
 from django.db.models import Q
 
 from .forms import GameForm, RegisterUserForm, LoginUserForm
-from .models import Question, Game, Player, HistoryMove
+from .models import Player, HistoryMove
 from .models import Game
 
 
@@ -66,7 +65,7 @@ class LogoutUser(LogoutView):
 
 @login_required()
 def index(request):
-    games = Game.objects.filter(Q(is_started=False) & (Q(datetime_creation__gt=(datetime.datetime.now() - datetime.timedelta(minutes=30)))
+    games = Game.objects.filter(Q(is_started=False) & (Q(datetime_creation__gt=(datetime.now() - timedelta(minutes=30)))
                                                        | Q(first_player=Player.objects.get(user=request.user))
                                                        | Q(second_player=Player.objects.get(user=request.user))
                                                        | Q(third_player=Player.objects.get(user=request.user))
@@ -116,8 +115,8 @@ def join_game(request, game_id):
                 game.third_player = player
             case 3:
                 game.fourth_player = player
+        player.number_move = game.number_of_players_connected
         game.number_of_players_connected += 1
-        player.number_move = game.number_of_players_connected - 1
         player.save()
     if game.number_of_players_connected == game.number_of_players:
         game.is_started = True
