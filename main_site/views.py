@@ -65,15 +65,16 @@ class LogoutUser(LogoutView):
 
 @login_required()
 def index(request):
+    player = get_object_or_404(Player, user=request.user)
     games = Game.objects.filter(Q(is_started=False) & (Q(datetime_creation__gt=(datetime.now() - timedelta(minutes=30)))
-                                                       | Q(first_player=Player.objects.get(user=request.user))
-                                                       | Q(second_player=Player.objects.get(user=request.user))
-                                                       | Q(third_player=Player.objects.get(user=request.user))
-                                                       | Q(fourth_player=Player.objects.get(user=request.user)))).all()
+                                                       | Q(first_player=player)
+                                                       | Q(second_player=player)
+                                                       | Q(third_player=player)
+                                                       | Q(fourth_player=player))).all()
     for game in games:
         setattr(game, 'list_of_players', [game.first_player, game.second_player, game.third_player, game.fourth_player][:game.number_of_players])
         setattr(game, 'number_of_players', range(game.number_of_players))
-    return render(request, 'main_site/main.html', {'title': 'Главная', 'games': games, 'this_player': Player.objects.get(user=request.user)})
+    return render(request, 'main_site/main.html', {'title': 'Главная', 'games': games, 'this_player': player})
 
 
 @login_required()
