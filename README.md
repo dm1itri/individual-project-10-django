@@ -1,23 +1,32 @@
-# Игрушка на Джанго
+# :game_die: Игрушка на Джанго
 
 ## Тема и описание проекта
+
 Данная игра позволяет увеличить естестественно-научных знания в процессе развлечения с друзьями
 
-## Сыграть - ДОПИСАТЬ
+- [Project objectives](#🎯-project-objectives)
+- [The beginning of the game](#the-beginning-of-the-game)
+- [Examples](#examples)
+- [The rules of the game](#the-rules-of-the-game)
+- [Languages and Tools](#languages-and-tools)
+- [License](#license)
+- [Contact Information](#contact-information)
 
-## Цели проекта:
+## 🎯 Project objectives
 - Расширить знания Django
 - Разобраться с фронтенд разработкой (изучить JavaScript, Sass)
 - Написать многопользовательскую WEB-игру
 
 
-## Начало игры 
-1. Перейдите на главную страницу WEB-приложения
-2. Настройте игровую комнату
-3. Нажмите создать игру
-5. ПОзовите своих друзей
+## The beginning of the game
+1. Перейдите на [главную страницу](https://cq81991.tw1.ru) WEB-приложения
+2. Авторизируйтесь
+3. Настройте игровую комнату
+4. ПОзовите своих друзей
 
-## Правила игры
+## 🖼️ Examples
+
+## 📜 The rules of the game
 - Игроки выполняют ход в той последовательности, в которой присоединились к игровому процессу
 - Ход выполняется посредством бросания кубика
 - В игре присутствует несколько типов клеток
@@ -37,36 +46,20 @@
 - При неправильном ответет на вопрос начисляется одно очко, при неправильном - ноль
 - Завершение игры происходит при даче ответов на определённое количетсво вопросов
 
-## Реализация ##
 
-Код состоит из классов и функций, выполняющих всю работу
+## 🛠️ Languages and Tools
+<div>
+  <img src="https://github.com/devicons/devicon/blob/master/icons/html5/html5-original.svg" title="HTML5" alt="HTML" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/css3/css3-plain-wordmark.svg"  title="CSS3" alt="CSS" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/sass/sass-original.svg" title="SASS" alt="SASS" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/javascript/javascript-original.svg" title="JavaScript" alt="JavaScript" width="40" height="40"/>&nbsp;
+    <img src="https://github.com/devicons/devicon/blob/master/icons/python/python-original.svg" title="Python"  alt="Python" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/django/django-plain-wordmark.svg" title="Django"  alt="Django" width="40" height="40"/>&nbsp;
+  <img src="https://github.com/devicons/devicon/blob/master/icons/mysql/mysql-original-wordmark.svg" title="MySQL"  alt="MySQL" width="40" height="40"/>&nbsp;
 
-_**Классы**_:
-- MyAPIView(APIView)
-- PlayersAPIView(MyAPIView)
-- GameAPIView(MyAPIView)
-- HistoryAPIView(MyAPIView)
-- QuestionAPIView(MyAPIView)
-- PlayersStaticsAPIView(MyAPIView)
-- GamesAPIView(ListAPIView)
-- MyGameAPIView(APIView)
-- QuestionAdmin(admin.ModelAdmin)
-- GameAdmin(admin.ModelAdmin)
-- HistoryMoveAdmin(admin.ModelAdmin)
-- GameForm(forms.ModelForm)
-- RegisterUserForm(BaseUserCreationForm)
-- LoginUserForm(AuthenticationForm)
-- Question(models.Model)
-- Game(models.Model)
-- HistoryMove(models.Model)
-- Player(models.Model)
-- CreateGame(CreateView)
-- RegisterUser(CreateView)
-- LoginUser(LoginView)
-- LogoutUser(LogoutView)
+  <img src="https://github.com/devicons/devicon/blob/master/icons/git/git-original-wordmark.svg" title="Git" alt="Git" width="40" height="40"/>
+</div>
 
-_**Основные библиотеки**_:
-- Django
+## License
 
-_**Версия PYTHON**_:
-- 3.12
+## Contact information
