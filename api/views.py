@@ -29,7 +29,7 @@ class PlayersAPIView(MyAPIView):
         super().get(request)
         players = self.players[: self.game.number_of_players]
         number_history = (
-            HistoryMove.objects.filter(game_id=self.game.id)
+            HistoryMove.objects.filter(game=self.game)
             .order_by("number_history")
             .last()
             .number_history
@@ -125,11 +125,11 @@ class HistoryAPIView(MyAPIView):
         number_history = int(self.request.GET["number_history"])
         if number_history:
             move = HistoryMove.objects.filter(
-                game_id=self.game.id, number_history=number_history
+                game=self.game, number_history=number_history
             ).first()
         else:
             move = (
-                HistoryMove.objects.filter(game_id=self.game.id)
+                HistoryMove.objects.filter(game=self.game)
                 .order_by("-number_history")
                 .first()
             )
@@ -146,8 +146,8 @@ class HistoryAPIView(MyAPIView):
         number_move = int(self.request.data["number_move"])
         number_steps = int(self.request.data["number_steps"])
         HistoryMove.objects.create(
-            game_id=self.game,
-            number_history=HistoryMove.objects.filter(game_id=self.game.id)
+            game=self.game,
+            number_history=HistoryMove.objects.filter(game=self.game)
             .order_by("-number_history")
             .first()
             .number_history
@@ -166,11 +166,10 @@ class QuestionAPIView(MyAPIView):
             type_question = choice(["Биология", "История", "География"])
         question = choice(Question.objects.filter(type_question=type_question[0]).all())
 
-        game = Game.objects.get(id=self.game.id)
-        game.question_id = question.id
-        player = self.players[game.current_player]
+        self.game.question_id = question.id
+        player = self.players[self.game.current_player]
         player.number_of_questions_received += 1
-        game.save()
+        self.game.save()
         player.save()
         return JsonResponse(
             model_to_dict(
@@ -194,7 +193,7 @@ class PlayersStaticsAPIView(MyAPIView):
         for index, player in enumerate(players):
             players_statics[index] = {
                 "numbers_of_moves": HistoryMove.objects.filter(
-                    game_id=self.game.id, number_move=index
+                    game=self.game, number_move=index
                 ).count(),
                 "percent_of_correct_answers": f"{int(player.number_of_correct_answers / player.number_of_questions_received * 100) if player.number_of_questions_received else 0}%",
                 **model_to_dict(

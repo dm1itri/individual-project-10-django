@@ -7,7 +7,7 @@ from main_site.models import Game
 
 class GameForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
-        super(GameForm, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
 
     class Meta:
         model = Game

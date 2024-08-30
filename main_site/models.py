@@ -32,7 +32,9 @@ class Question(models.Model):
             "Г": "География",
             "И": "История",
         }
-        return f"<Вопрос {self.id}> {type_question[self.type_question]}\t{self.question[:min(100, len(self.question))]}"
+        return (
+            f"<Вопрос {self.id}> {type_question[self.type_question]}\t{self.question}"
+        )
 
     class Meta:
         verbose_name = "вопрос"
@@ -104,11 +106,11 @@ class HistoryMove(models.Model):
         default=0,
         validators=[MinValueValidator(0), MaxValueValidator(23)],
     )
-    game_id = models.ForeignKey("Game", on_delete=models.CASCADE)
+    game = models.ForeignKey("Game", on_delete=models.CASCADE)
     datetime_addition = models.DateTimeField("Время добавления", default=timezone.now)
 
     def __str__(self):
-        return f"<История {self.number_history}> игры {self.game_id.id}"
+        return f"<История {self.number_history}> игры {self.game.id}"
 
     class Meta:
         verbose_name = "история"

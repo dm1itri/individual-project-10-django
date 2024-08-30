@@ -158,7 +158,7 @@ def join_game(request, game_id):
         game.is_started = True
         game.save()
         null_history_move = HistoryMove(
-            game_id=game, number_history=0, number_move=-1, number_steps=0
+            game=game, number_history=0, number_move=-1, number_steps=0
         )
         null_history_move.save()
         return redirect("main_site:Игра", game_id)

@@ -2,6 +2,7 @@ from django.contrib import admin
 from .models import Question, Game, HistoryMove, Player
 
 
+@admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     list_display = ["type_question", "question", "answer_correct", "datetime_addition"]
     list_filter = ["type_question", "datetime_addition"]
@@ -17,6 +18,7 @@ class QuestionAdmin(admin.ModelAdmin):
     ]
 
 
+@admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     list_display = [
         "current_player",
@@ -29,19 +31,16 @@ class GameAdmin(admin.ModelAdmin):
     list_filter = ["is_started", "is_over", "datetime_creation"]
 
 
+@admin.register(HistoryMove)
 class HistoryMoveAdmin(admin.ModelAdmin):
     list_display = [
-        "game_id",
+        "game",
         "number_history",
         "number_move",
         "number_steps",
         "datetime_addition",
     ]
-    list_filter = ["game_id", "datetime_addition"]
+    list_filter = ["game", "datetime_addition"]
 
 
-# Register your models here.
-admin.site.register(Question, QuestionAdmin)
-admin.site.register(Game, GameAdmin)
-admin.site.register(HistoryMove, HistoryMoveAdmin)
 admin.site.register(Player)
