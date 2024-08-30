@@ -5,35 +5,58 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main_site', '0002_alter_game_fourth_player_alter_game_second_player_and_more'),
+        (
+            "main_site",
+            "0002_alter_game_fourth_player_alter_game_second_player_and_more",
+        ),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='game',
-            name='number_of_questions_answered',
-            field=models.IntegerField(default=0, verbose_name='Кол-во отвеченных вопросов'),
+            model_name="game",
+            name="number_of_questions_answered",
+            field=models.IntegerField(
+                default=0, verbose_name="Кол-во отвеченных вопросов"
+            ),
         ),
         migrations.AlterField(
-            model_name='game',
-            name='current_player',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(3)], verbose_name='Ходящий'),
+            model_name="game",
+            name="current_player",
+            field=models.IntegerField(
+                default=0,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(3),
+                ],
+                verbose_name="Ходящий",
+            ),
         ),
         migrations.AlterField(
-            model_name='player',
-            name='number_of_correct_answers',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Кол-во верных ответов'),
+            model_name="player",
+            name="number_of_correct_answers",
+            field=models.IntegerField(
+                default=0,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Кол-во верных ответов",
+            ),
         ),
         migrations.AlterField(
-            model_name='player',
-            name='number_of_points',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Количество очков'),
+            model_name="player",
+            name="number_of_points",
+            field=models.IntegerField(
+                default=0,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Количество очков",
+            ),
         ),
         migrations.AlterField(
-            model_name='player',
-            name='number_of_questions_received',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Кол-во ответов'),
+            model_name="player",
+            name="number_of_questions_received",
+            field=models.IntegerField(
+                default=0,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Кол-во ответов",
+            ),
         ),
     ]

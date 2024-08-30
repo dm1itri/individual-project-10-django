@@ -5,15 +5,21 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main_site', '0004_player_global_number_games_and_more'),
+        ("main_site", "0004_player_global_number_games_and_more"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='player',
-            name='number_of_questions_received',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)], verbose_name='Кол-во вопросов'),
+            model_name="player",
+            name="number_of_questions_received",
+            field=models.IntegerField(
+                default=0,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(100),
+                ],
+                verbose_name="Кол-во вопросов",
+            ),
         ),
     ]

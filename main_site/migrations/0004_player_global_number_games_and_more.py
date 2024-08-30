@@ -5,40 +5,72 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main_site', '0003_game_number_of_questions_answered_and_more'),
+        ("main_site", "0003_game_number_of_questions_answered_and_more"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='player',
-            name='global_number_games',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Количество игр'),
+            model_name="player",
+            name="global_number_games",
+            field=models.IntegerField(
+                default=0,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Количество игр",
+            ),
         ),
         migrations.AddField(
-            model_name='player',
-            name='global_number_of_correct_answers',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Общее кол-во верных ответов'),
+            model_name="player",
+            name="global_number_of_correct_answers",
+            field=models.IntegerField(
+                default=0,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Общее кол-во верных ответов",
+            ),
         ),
         migrations.AddField(
-            model_name='player',
-            name='global_number_of_questions_received',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0)], verbose_name='Общее количество полученных вопросов'),
+            model_name="player",
+            name="global_number_of_questions_received",
+            field=models.IntegerField(
+                default=0,
+                validators=[django.core.validators.MinValueValidator(0)],
+                verbose_name="Общее количество полученных вопросов",
+            ),
         ),
         migrations.AlterField(
-            model_name='historymove',
-            name='number_move',
-            field=models.IntegerField(default=-1, validators=[django.core.validators.MinValueValidator(-1), django.core.validators.MaxValueValidator(3)], verbose_name='Номер ходящего'),
+            model_name="historymove",
+            name="number_move",
+            field=models.IntegerField(
+                default=-1,
+                validators=[
+                    django.core.validators.MinValueValidator(-1),
+                    django.core.validators.MaxValueValidator(3),
+                ],
+                verbose_name="Номер ходящего",
+            ),
         ),
         migrations.AlterField(
-            model_name='player',
-            name='number_of_correct_answers',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)], verbose_name='Кол-во верных ответов'),
+            model_name="player",
+            name="number_of_correct_answers",
+            field=models.IntegerField(
+                default=0,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(100),
+                ],
+                verbose_name="Кол-во верных ответов",
+            ),
         ),
         migrations.AlterField(
-            model_name='player',
-            name='number_of_questions_received',
-            field=models.IntegerField(default=0, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(100)], verbose_name='Кол-во ответов'),
+            model_name="player",
+            name="number_of_questions_received",
+            field=models.IntegerField(
+                default=0,
+                validators=[
+                    django.core.validators.MinValueValidator(0),
+                    django.core.validators.MaxValueValidator(100),
+                ],
+                verbose_name="Кол-во ответов",
+            ),
         ),
     ]

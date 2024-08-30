@@ -5,25 +5,39 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('main_site', '0001_initial'),
+        ("main_site", "0001_initial"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='game',
-            name='fourth_player',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='fourth_player', to='main_site.player'),
+            model_name="game",
+            name="fourth_player",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="fourth_player",
+                to="main_site.player",
+            ),
         ),
         migrations.AlterField(
-            model_name='game',
-            name='second_player',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='second_player', to='main_site.player'),
+            model_name="game",
+            name="second_player",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="second_player",
+                to="main_site.player",
+            ),
         ),
         migrations.AlterField(
-            model_name='game',
-            name='third_player',
-            field=models.ForeignKey(null=True, on_delete=django.db.models.deletion.CASCADE, related_name='third_player', to='main_site.player'),
+            model_name="game",
+            name="third_player",
+            field=models.ForeignKey(
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="third_player",
+                to="main_site.player",
+            ),
         ),
     ]
