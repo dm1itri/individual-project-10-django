@@ -1,3 +1,5 @@
+from typing import Any
+
 from django.db import models
 from django.utils import timezone
 from django.core.validators import (
@@ -26,7 +28,7 @@ class Question(models.Model):
     answer_4 = models.CharField("Четвертый ответ", max_length=32, blank=True)
     datetime_addition = models.DateTimeField("Время добавления", default=timezone.now)
 
-    def __str__(self):
+    def __str__(self) -> str:
         type_question = {
             "Б": "Биология",
             "Г": "География",
@@ -84,7 +86,7 @@ class Game(models.Model):
         "Player", on_delete=models.CASCADE, related_name="fourth_player", null=True
     )
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<Игра {self.id}> Текущий игрок: {self.current_player} Количество игроков: {self.number_of_players}"
 
     class Meta:
@@ -109,7 +111,7 @@ class HistoryMove(models.Model):
     game = models.ForeignKey("Game", on_delete=models.CASCADE)
     datetime_addition = models.DateTimeField("Время добавления", default=timezone.now)
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<История {self.number_history}> игры {self.game.id}"
 
     class Meta:
@@ -167,7 +169,7 @@ class Player(models.Model):
         ],
     )
 
-    def clear_after_game(self):
+    def clear_after_game(self) -> None:
         self.global_number_games += 1
         self.global_number_of_questions_received += self.number_of_questions_received
         self.global_number_of_correct_answers += self.number_of_correct_answers
@@ -182,7 +184,7 @@ class Player(models.Model):
         self.thinks_about_the_question = False
         self.save()
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"{self.user}"
 
     class Meta:
@@ -191,6 +193,8 @@ class Player(models.Model):
 
 
 @receiver(post_save, sender=User)
-def create_user_profile(sender, instance, created, **kwargs):
+def create_user_profile(
+    sender: User, instance: User, created: bool, **kwargs: Any
+) -> None:
     if created:
         Player.objects.create(user=instance)

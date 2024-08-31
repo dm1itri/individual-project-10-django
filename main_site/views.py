@@ -1,7 +1,15 @@
 from datetime import datetime, timedelta
+from typing import Any
+
 from django.contrib.auth import login
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.views import LogoutView, LoginView
+from django.core.handlers.wsgi import WSGIRequest
+from django.http import (
+    HttpResponseRedirect,
+    HttpResponse,
+    HttpResponsePermanentRedirect,
+)
 from django.shortcuts import get_object_or_404, render, redirect
 from django.urls import reverse_lazy
 from django.views.generic import CreateView
@@ -17,12 +25,12 @@ class CreateGame(CreateView):
     template_name = "main_site/create_game.html"
     success_url = reverse_lazy("main_site:Главная")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
         context["title"] = "Создание игры"
         return context
 
-    def form_valid(self, form):
+    def form_valid(self, form: GameForm) -> HttpResponseRedirect:
         player = Player.objects.get(user=self.request.user)
         is_playing = Game.objects.filter(
             (
@@ -46,12 +54,14 @@ class RegisterUser(CreateView):
     template_name = "main_site/register.html"
     success_url = reverse_lazy("main_site:Главная")
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context: dict[str, Any] = super().get_context_data(**kwargs)
         context["title"] = "Регистрация"
         return context
 
-    def form_valid(self, form):
+    def form_valid(
+        self, form: RegisterUserForm
+    ) -> HttpResponsePermanentRedirect | HttpResponseRedirect:
         user = form.save()
         login(self.request, user)
         return redirect("main_site:Главная")
@@ -120,7 +130,9 @@ def dismiss(request):
 
 
 @login_required()
-def leave_started_game(request, game_id):
+def leave_started_game(
+    request: WSGIRequest, game_id: int
+) -> HttpResponsePermanentRedirect | HttpResponseRedirect | None:
     player = Player.objects.get(user=request.user)
     game = Game.objects.get(id=game_id)
     if (
@@ -137,10 +149,13 @@ def leave_started_game(request, game_id):
         game.is_over = True
         game.save()
         return redirect("main_site:Главная")
+    return None
 
 
 @login_required()
-def join_game(request, game_id):
+def join_game(
+    request: WSGIRequest, game_id: int
+) -> HttpResponsePermanentRedirect | HttpResponseRedirect:
     game = get_object_or_404(Game, pk=game_id)
     if game.number_of_players_connected < game.number_of_players:
         player = Player.objects.get(user=request.user)
@@ -167,7 +182,9 @@ def join_game(request, game_id):
 
 
 @login_required()
-def leave_game(request, game_id):
+def leave_game(
+    request: WSGIRequest, game_id: int
+) -> HttpResponsePermanentRedirect | HttpResponseRedirect:
     player = Player.objects.get(user=request.user)
     game = Game.objects.get(id=game_id)
     if game.second_player == player:
@@ -181,7 +198,7 @@ def leave_game(request, game_id):
 
 
 @login_required()
-def profile_player(request):
+def profile_player(request: WSGIRequest) -> HttpResponse:
     player = Player.objects.get(user=request.user)
     context = {
         "title": "Профиль игрока",

@@ -1,9 +1,11 @@
 from random import choice
+from typing import Any
 
 from rest_framework import status
 from rest_framework.generics import ListAPIView
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework.request import Request
 
 from api.serializers import GamesSerializer
 from main_site.models import Game, HistoryMove, Question
@@ -25,7 +27,7 @@ class MyAPIView(APIView):
 
 
 class PlayersAPIView(MyAPIView):
-    def get(self, request):
+    def get(self, request: Request) -> Response:
         super().get(request)
         players = self.players[: self.game.number_of_players]
         number_history = (
@@ -61,7 +63,7 @@ class PlayersAPIView(MyAPIView):
 
 
 class GameAPIView(MyAPIView):
-    def get(self, request):
+    def get(self, request: Request) -> JsonResponse:
         super().get(request)
         current_player = self.players[self.game.current_player]
 
@@ -159,7 +161,7 @@ class HistoryAPIView(MyAPIView):
 
 
 class QuestionAPIView(MyAPIView):
-    def get(self, request):
+    def get(self, request: Request) -> JsonResponse:
         super().get(request)
         type_question = self.request.query_params["type_question"]
         if type_question == "Случайный":
@@ -186,7 +188,7 @@ class QuestionAPIView(MyAPIView):
 
 
 class PlayersStaticsAPIView(MyAPIView):
-    def get(self, request):
+    def get(self, request: Request) -> JsonResponse:
         super().get(request)
         players_statics = {}
         players = self.players[: self.game.number_of_players]
@@ -209,7 +211,7 @@ class GamesAPIView(ListAPIView):
 
 
 class MyGameAPIView(APIView):
-    def get(self, *args, **kwargs):
+    def get(self, *args: Any, **kwargs: Any) -> JsonResponse | Response:
         user_id = kwargs.get("user_id")
         try:
             game = Game.objects.get(
